@@ -1,0 +1,131 @@
+class Header extends React.Component{
+  render(){
+    return(
+    <header>
+        <h1> FreeCodeCamp Leaderboard </h1>
+    </header>
+    )
+  }
+}
+
+//The column headings
+class TableHeadings extends React.Component {
+  render() {
+    return(
+      <thead>
+        <tr id="tableHeader">
+          <th id="number">#</th>
+          <th id="profileHeader">User</th>
+          <th id="totalScore" onClick={this.props.handleClickTotal}>Total Score</th>
+          <th id="recentScore" onClick={this.props.handleClickRecent}>Score in Past 30 Days</th>
+        </tr>
+      </thead>
+    );
+  }
+}
+
+//renders the table after fetching data
+class TableData extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      users: [], 
+      sortRecent: false,
+    };
+  }
+  
+  //makes initial request for FCC json data
+  componentDidMount(){
+      $.ajax({
+        url: "https://fcctop100.herokuapp.com/api/fccusers/top/recent",
+        dataType: "json",
+        cache: false,
+        success: function(data){
+          var users = data;
+          this.setState({
+            users: users,
+          });
+        }.bind(this)
+      });
+  }
+  
+  //changes the table to be sorted by total points
+  handleClickTotal(){
+    $.ajax({
+        url: "https://fcctop100.herokuapp.com/api/fccusers/top/alltime",
+        dataType: "json",
+        cache: false,
+        success: function(data){
+          this.setState({
+            users: data,
+          });
+        }.bind(this)
+      });
+  }
+  
+  //changes the table to be sorted by recent points
+  handleClickRecent(){
+     $.ajax({
+        url: "https://fcctop100.herokuapp.com/api/fccusers/top/recent",
+        dataType: "json",
+        cache: false,
+        success: function(data){
+          this.setState({
+            users: data,
+          });
+        }.bind(this)
+      });
+  }
+  
+  render(){
+    return(
+    <div>
+      <TableHeadings 
+        handleClickTotal={this.handleClickTotal.bind(this)}
+        handleClickRecent={this.handleClickRecent.bind(this)} 
+        /> 
+      <Users users={this.state.users}/>
+    </div>
+      );
+  } 
+}
+
+//returns a table row with user data
+class Users extends React.Component {
+  render(){
+    return(
+      <tbody>
+      {
+       this.props.users.map(function(user, index){
+        return(
+      <tr>
+        <td className="position">{index + 1}</td>
+        <td className="profileImgBox"><img className="profileImg" src={user.img}/> {user.username} </td>
+        <td className="allTimeScore"> {user.alltime} </td>
+        <td className="recentScore"> {user.recent} </td>
+      </tr>)
+       })
+      }
+      </tbody>
+    );
+  }
+}
+
+//renders project in its entirety
+class App extends React.Component{
+  render(){
+    return(
+      <div>
+        <Header/>
+        <table className="fullTable table">
+          <TableData/>
+        </table>
+      </div>
+    );
+  }
+}
+
+ReactDOM.render(
+  <App />,
+  document.getElementById("root")
+)

@@ -1,0 +1,36 @@
+h1 {
+  font-size: 20px;
+  margin-left: 20px;
+  height: 25px;
+}
+
+header {
+  background-color: #009900;
+  margin-bottom: 25px;
+}
+
+thead {
+  background-color: #009900;
+}
+
+td {
+  background-color: #f2f2f2;
+}
+
+.table {
+  margin: auto;
+  width: 50% !important;
+}
+
+.profileImg {
+  width: 50px;
+  max-height: 50px;
+}
+
+#totalScore {
+  cursor: pointer;
+}
+
+#recentScore {
+  cursor: pointer;
+}
